@@ -60,3 +60,12 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# Virtualenv
+.Python
+bin
+lib
+include
+
+# Mac OS X custom attribute files
+.DS_Store
