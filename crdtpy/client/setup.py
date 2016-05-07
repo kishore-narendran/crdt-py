@@ -15,4 +15,6 @@ setup(name='crdtpy',
       license='MIT',
       packages=find_packages(),
       setup_requires=['nose>=3.5'],
+      test_suite='nose.collector',
+      tests_require=['nose'],
       zip_safe=False)
