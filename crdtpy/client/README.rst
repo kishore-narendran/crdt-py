@@ -1,3 +1,4 @@
-# Client: A python package
+crdtpy
+-------
+Usage Documentation
 
-## Client is a python package with which the client should be able to connect to server, create, update and delete various CRDT data types
