@@ -14,4 +14,5 @@ setup(name='crdtpy',
       keywords='Distributed Systems CRDT Strong Eventual Consistency Database',
       license='MIT',
       packages=find_packages(),
+      setup_requires=['nose>=3.5'],
       zip_safe=False)
