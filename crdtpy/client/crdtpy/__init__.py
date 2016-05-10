@@ -1,2 +1,2 @@
-def dummy():
-    return 'dummy'
+from credit import Credit
+
