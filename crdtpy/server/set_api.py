@@ -2,11 +2,11 @@ from flask import Blueprint, jsonify, request
 from generate_key import generate_random_key
 
 
-counter_api_blueprint = Blueprint('Counter', __name__)
+set_api_blueprint = Blueprint('Set', __name__)
 
 
-@counter_api_blueprint.route("/g/new", methods=['GET'])
-def new_g_counter():
+@set_api_blueprint.route("/g/new", methods=['GET'])
+def new_g_set():
     key = request.args.get('key')
 
     ##
@@ -16,16 +16,17 @@ def new_g_counter():
         key = generate_random_key()
 
     ##
-    # TODO - Creating, a new counter and inserting into redis
+    # TODO - Creating, a new set and inserting into redis
 
     result_dict = dict()
     result_dict['status'] = {'message': 'success', 'code': 0}
     result_dict['key'] = key
+    result_dict['set'] = []
 
     return jsonify(result_dict)
 
 
-@counter_api_blueprint.route("/g/update", methods=['GET'])
+@set_api_blueprint.route("/g/update", methods=['GET'])
 def update_g_counter_state():
     key = request.args.get('key')
     state = request.args.get('state')
@@ -36,18 +37,18 @@ def update_g_counter_state():
                                  'notes': 'Key/State of counter was missing or malformed'}
     else:
         ##
-        # TODO - Check for counter with given key, and if there is such a counter, perform merge
+        # TODO - Check for set with given key, and if there is such a set, perform merge
 
         result_dict['status'] = {'message': 'success', 'code': 1}
 
         ##
-        # TODO - Return updated counter value
-        result_dict['counter'] = 0
+        # TODO - Return updated set
+        result_dict['state'] = []
 
     return jsonify(result_dict)
 
 
-@counter_api_blueprint.route("/pn/new", methods=['GET'])
+@set_api_blueprint.route("/2p/new", methods=['GET'])
 def new_pn_counter():
     key = request.args.get('key')
 
@@ -58,16 +59,17 @@ def new_pn_counter():
         key = generate_random_key()
 
     ##
-    # TODO - Creating, a new counter and inserting into redis
+    # TODO - Creating, a new set and inserting into redis
 
     result_dict = dict()
     result_dict['status'] = {'message': 'success', 'code': 0}
     result_dict['key'] = key
+    result_dict['set'] = []
 
     return jsonify(result_dict)
 
 
-@counter_api_blueprint.route("/pn/update", methods=['GET'])
+@set_api_blueprint.route("/2p/update", methods=['GET'])
 def update_counter_state():
     key = request.args.get('key')
     state = request.args.get('state')
@@ -78,12 +80,12 @@ def update_counter_state():
                                  'notes': 'Key/State of counter was missing or malformed'}
     else:
         ##
-        # TODO - Check for counter with given key, and if there is such a counter, perform merge
+        # TODO - Check for set with given key, and if there is such a set, perform merge
 
         result_dict['status'] = {'message': 'success', 'code': 1}
 
         ##
-        # TODO - Return updated counter value
-        result_dict['counter'] = 0
+        # TODO - Return updated set value
+        result_dict['set'] = []
 
     return jsonify(result_dict)
