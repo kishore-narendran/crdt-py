@@ -1,4 +1,0 @@
-crdtpy
--------
-Usage Documentation
-

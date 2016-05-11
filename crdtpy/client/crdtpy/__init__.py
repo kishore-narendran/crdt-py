@@ -1,2 +1,0 @@
-from credit import Credit
-
