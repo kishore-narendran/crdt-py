@@ -1,14 +1,13 @@
-from Flask import Blueprint, app, jsonify, request
+from flask import Blueprint, jsonify, request
 from generate_key import generate_random_key
 
 
-counter_api = Blueprint('Counter', __name__)
+counter_api_blueprint = Blueprint('Counter', __name__)
 
 
-@app.route("/counter/g/new", methods=['GET'])
+@counter_api_blueprint.route("/g/new", methods=['GET'])
 def new_g_counter():
     key = request.args.get('key')
-    print "Key", key
 
     ##
     # If the key in request is empty or if there is no key in request
@@ -26,7 +25,7 @@ def new_g_counter():
     return jsonify(result_dict)
 
 
-@app.route("/counter/g/update", methods=['GET'])
+@counter_api_blueprint.route("/g/update", methods=['GET'])
 def update_g_counter_state():
     key = request.args.get('key')
     state = request.args.get('state')
@@ -48,10 +47,9 @@ def update_g_counter_state():
     return jsonify(result_dict)
 
 
-@app.route("/counter/pn/new", methods=['GET'])
+@counter_api_blueprint.route("/pn/new", methods=['GET'])
 def new_pn_counter():
     key = request.args.get('key')
-    print "Key", key
 
     ##
     # If the key in request is empty or if there is no key in request
@@ -69,7 +67,7 @@ def new_pn_counter():
     return jsonify(result_dict)
 
 
-@app.route("/counter/pn/update", methods=['GET'])
+@counter_api_blueprint.route("/pn/update", methods=['GET'])
 def update_counter_state():
     key = request.args.get('key')
     state = request.args.get('state')
