@@ -14,3 +14,7 @@ A library, that provides Conflict-free Replicated Data Types (CRDTs) for distrib
 6. Install the dependencies `pip install -r requirements.txt`
 
 NOTE - When done using and developing for this project, run the command `deactivate`
+
+##Dependencies
+
+1. This project needs a running copy of [Redis](http://redis.io/) locally. Get a copy of Redis, [here](http://redis.io/download).
