@@ -7,5 +7,13 @@ app = Flask(__name__)
 app.register_blueprint(counter_api_blueprint, url_prefix='/counter')
 app.register_blueprint(set_api_blueprint, url_prefix='/set')
 
-if __name__ == "__main__":
+
+def run():
     app.run()
+
+if __name__ == "__main__":
+    shared_variable = 10
+    run()
+
+
+

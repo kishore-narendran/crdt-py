@@ -8,7 +8,6 @@ counter_api_blueprint = Blueprint('Counter', __name__)
 @counter_api_blueprint.route("/g/new", methods=['GET'])
 def new_g_counter():
     key = request.args.get('key')
-
     ##
     # If the key in request is empty or if there is no key in request
 

@@ -1,0 +1,3 @@
+import crdt
+
+crdt.run()
