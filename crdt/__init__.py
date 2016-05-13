@@ -12,7 +12,6 @@ def run():
     app.run()
 
 if __name__ == "__main__":
-    shared_variable = 10
     run()
 
 
