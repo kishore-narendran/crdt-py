@@ -1,1 +1,1 @@
-web: gunicorn crdt:app
+web: gunicorn --log-file=- crdt:app
