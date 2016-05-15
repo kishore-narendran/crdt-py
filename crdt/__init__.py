@@ -1,8 +1,9 @@
 from flask import Flask
-from counter_api import counter_api_blueprint
-from set_api import set_api_blueprint
+
 from constants import DATA_TYPES, NULL_TYPE, DUMMY_KEY
+from counter_api import counter_api_blueprint
 from redis_manager import redis_manager
+from set_api import set_api_blueprint
 
 app = Flask(__name__)
 
@@ -15,6 +16,7 @@ def run():
 
 
 def crdt_init():
+    redis_manager.flushall()
     redis_manager.hset(DATA_TYPES, DUMMY_KEY, NULL_TYPE)
 
 

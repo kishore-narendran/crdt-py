@@ -10,11 +10,9 @@ counter_api_blueprint = Blueprint('Counter', __name__)
 
 @counter_api_blueprint.route("/g/new", methods=['GET'])
 def new_g_counter():
-    print 'hiiiiii'
     key = request.args.get('key')
     clientid = request.args.get('clientid')
     val = request.args.get('val')
-    print key, clientid
     ##
     # If the key in request is empty or if there is no key in request
 
@@ -31,15 +29,12 @@ def new_g_counter():
     found_key_flag = redis_manager.hget(DATA_TYPES, key) is not None
     data_type_matched = (redis_manager.hget(DATA_TYPES, key) == G_COUNTER)
     if found_key_flag is False:
-        print 'here1'
-        print clients_list
         add_client_g_counter(cur_client, clients_list, val)
         redis_manager.hset(DATA_TYPES, key, G_COUNTER)
         result_dict['status'] = status_codes['success']
         result_dict['key'] = key
         result_dict['counter'] = val
     elif found_key_flag is True and data_type_matched is True:
-        print 'here2'
         add_client_g_counter(cur_client, clients_list, val)
         result_dict['status'] = status_codes['existing_key']
     else:
@@ -67,7 +62,6 @@ def update_g_counter_state():
     val = request.args.get('val')
 
     cur_client = key + '_' + cur_client_id
-    print key, cur_client_id, val, cur_client
     found_key_flag = redis_manager.hget(DATA_TYPES, key) is not None
     data_type_matched = (redis_manager.hget(DATA_TYPES, key) == G_COUNTER)
 
@@ -84,9 +78,7 @@ def update_g_counter_state():
     elif data_type_matched is False:
         result_dict['status'] = status_codes['data_type_mismatch']
     else:
-        print 'pingaaaaa1'
         redis_manager.hset(cur_client, cur_client, val)
-        print 'pingaaaaa2'
         result_dict['status'] = status_codes['success']
 
     return jsonify(result_dict)
