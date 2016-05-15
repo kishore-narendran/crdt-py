@@ -15,3 +15,4 @@ DATA_TYPES = 'datatypes'
 
 DUMMY_KEY = 'dummykey'
 
+CLIENTS = 'random'

@@ -1,7 +1,7 @@
 status_codes = {
     'success': {'message': 'success', 'code': 0},
     'failure': {'message': 'failure', 'code': 1},
-    'existing_key': {'message': 'failure', 'code': 2,
+    'existing_key': {'message': 'success', 'code': 2,
                      'description': 'An existing element with the same key found'},
     'data_type_mismatch': {'message': 'failure', 'code': 2,
                            'description': 'the key corresponds to another data type'},

@@ -1,14 +1,16 @@
 from flask import Blueprint, jsonify, request
+
+from constants import DATA_TYPES, G_COUNTER, CLIENTS
 from generate_key import generate_random_key
 from redis_manager import redis_manager
 from status_codes import status_codes
-from constants import DATA_TYPES, G_COUNTER
 
 counter_api_blueprint = Blueprint('Counter', __name__)
 
 
 @counter_api_blueprint.route("/g/new", methods=['GET'])
 def new_g_counter():
+    print 'hiiiiii'
     key = request.args.get('key')
     clientid = request.args.get('clientid')
     val = request.args.get('val')
@@ -19,25 +21,26 @@ def new_g_counter():
     if key is None or len(key) is 0:
         key = generate_random_key()
 
-    clients_list = 'random'+key
-    client_key = key + '_' + clientid
+    clients_list = CLIENTS + key
+    cur_client = key + '_' + clientid
 
-    print client_key, ' = client key'
     ##
     #  Checking if the key is already present in Redis
 
     result_dict = dict()
-    found_key_flag = redis_manager.get(key) is not None
-    data_type_matched = redis_manager.hget(DATA_TYPES, key) is G_COUNTER
+    found_key_flag = redis_manager.hget(DATA_TYPES, key) is not None
+    data_type_matched = (redis_manager.hget(DATA_TYPES, key) == G_COUNTER)
     if found_key_flag is False:
-        # redis_manager.set(key, val)
-        add_client_g_counter(client_key, clients_list, val)
+        print 'here1'
+        print clients_list
+        add_client_g_counter(cur_client, clients_list, val)
         redis_manager.hset(DATA_TYPES, key, G_COUNTER)
         result_dict['status'] = status_codes['success']
         result_dict['key'] = key
         result_dict['counter'] = val
     elif found_key_flag is True and data_type_matched is True:
-        add_client_g_counter(client_key, clients_list, val)
+        print 'here2'
+        add_client_g_counter(cur_client, clients_list, val)
         result_dict['status'] = status_codes['existing_key']
     else:
         result_dict['status'] = status_codes['data_type_mismatch']
@@ -46,29 +49,27 @@ def new_g_counter():
 
 
 def add_client_g_counter(new_client, clients_list, val):
-    lock = redis_manager.lock(clients_list)
+    for client in list(redis_manager.smembers(clients_list)):
+        redis_manager.hset(client, new_client, val)
 
-    if lock.acquire(blocking=False):
-        for client in list(redis_manager.smembers(clients_list)):
-            redis_manager.hset(client, new_client, val)
-        redis_manager.sadd(clients_list, new_client)
+    redis_manager.sadd(clients_list, new_client)
 
-        for client in list(redis_manager.smembers(clients_list)):
-            redis_manager.hset(new_client, client, 0)
+    for client in list(redis_manager.smembers(clients_list)):
+        redis_manager.hset(new_client, client, 0)
 
-        redis_manager.hset(new_client, new_client, val)
+    redis_manager.hset(new_client, new_client, val)
 
 
 @counter_api_blueprint.route("/g/update", methods=['GET'])
 def update_g_counter_state():
     key = request.args.get('key')
-    clientid = request.args.get('clientid')
-    val = request.args.get('state')
+    cur_client_id = request.args.get('clientid')
+    val = request.args.get('val')
 
-    client_key = key + '_' + clientid
-
-    found_key_flag = redis_manager.get(key) is not None
-    data_type_matched = redis_manager.hget(DATA_TYPES, key) is G_COUNTER
+    cur_client = key + '_' + cur_client_id
+    print key, cur_client_id, val, cur_client
+    found_key_flag = redis_manager.hget(DATA_TYPES, key) is not None
+    data_type_matched = (redis_manager.hget(DATA_TYPES, key) == G_COUNTER)
 
     result_dict = dict()
 
@@ -76,16 +77,16 @@ def update_g_counter_state():
     # Checking if a valid key and state has been requested, and checking if
     # the key is present in the Redis key/value data store.
 
-    if key is None or state is None:
+    if key is None or val is None:
         result_dict['status'] = status_codes['missing_key_or_state']
     elif found_key_flag is False:
         result_dict['status'] = status_codes['key_not_found']
     elif data_type_matched is False:
         result_dict['status'] = status_codes['data_type_mismatch']
     else:
-        ##
-        # TODO - update the state of current client
-        redis_manager.hset(client_key, client_key, val)
+        print 'pingaaaaa1'
+        redis_manager.hset(cur_client, cur_client, val)
+        print 'pingaaaaa2'
         result_dict['status'] = status_codes['success']
 
     return jsonify(result_dict)
@@ -94,24 +95,36 @@ def update_g_counter_state():
 @counter_api_blueprint.route("/g/get", methods=['GET'])
 def get_g_counter():
     key = request.args.get('key')
-    clientid = request.args.get('clientid')
+    cur_client_id = request.args.get('clientid')
 
-    clients_list = key + '_' + 'clients'
-    client_key = key + '_' + clientid
+    clients_list = CLIENTS + key
+    cur_client = key + '_' + cur_client_id
 
-    no_of_clients = redis_manager.scard(clients_list)
     counter = 0
-    for index in xrange(no_of_clients):
-        counter += int(redis_manager.hget(client_key, redis_manager.lindex(clients_list, index)))
+    all_clients = list(redis_manager.smembers(clients_list))
+
+    # TRIGGER MERGE to update state of this client
+    g_counter_merge(cur_client, all_clients)
+
+    # ADD up the counts of all clients
+    for client in all_clients:
+        counter += int(redis_manager.hget(cur_client, client))
 
     result_dict = dict()
     result_dict['status'] = status_codes['success']
     result_dict['counter'] = counter
 
-    # TODO - Lazy Merge: spawn a thread, asynchronously assign it a task to get all
-    # TODO - the other client states to merge with current client state.
-
     return jsonify(result_dict)
+
+
+def g_counter_merge(cur_client, all_clients):
+    cur_client_state = redis_manager.hgetall(cur_client)
+    for client in all_clients:
+        client_state = redis_manager.hgetall(client)
+        for k, v in cur_client_state.items():
+            cur_client_state[k] = max(int(v), int(client_state[k]))
+    for k, v in cur_client_state.items():
+        redis_manager.hset(cur_client, k, v)
 
 
 @counter_api_blueprint.route("/pn/new", methods=['GET'])
