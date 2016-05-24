@@ -1,7 +1,7 @@
 from flask import Flask
 
-from constants import DATA_TYPES, NULL_TYPE, DUMMY_KEY
 from counter_api import counter_api_blueprint
+from crdt.model.constants import DATA_TYPES, NULL_TYPE, DUMMY_KEY
 from redis_manager import redis_manager
 from set_api import set_api_blueprint
 
