@@ -1,3 +1,5 @@
+import random
+
 import hot_redis
 
 from crdt.constants import DATA_TYPES, G_COUNTER
@@ -30,9 +32,12 @@ class GCounter:
             for client in self.client_list:
                 new_client_state[client] = 0
 
-    def get(self, client_id):
+    def get(self, client_id=None):
         # Getting the client's key for this GCounter
-        current_client_key = get_client_key(self.key, client_id)
+        if client_id is None:
+            current_client_key = random.choice(list(self.client_list.value))
+        else:
+            current_client_key = get_client_key(self.key, client_id)
 
         # Merging state from every other client for this GCounter
         for client in self.client_list:
@@ -54,14 +59,31 @@ class GCounter:
         client_b_state = hot_redis.Dict(key=client_b, client=connection)
 
         # Merging Client A's state with Client B's state and storing in Client A's State
+        print self.client_list
         for client in self.client_list:
+            print client
+            print client_a_state
             client_a_state[client] = max(int(client_a_state[client]), int(client_b_state[client]))
 
-    def set(self, client_id, val):
+    def peek(self, client_id):
+        # Generating the current client's key for GCounter
+        current_client_key = get_client_key(self.key, client_id)
 
+        # Peek at the current value
+        return int(hot_redis.Dict(key=current_client_key, client=connection)[current_client_key])
+
+    def increment(self, client_id, inc=1):
+        self.set(client_id, self.peek(client_id) + int(inc))
+
+    def set(self, client_id, val):
         # Generating the current client's key for GCounter
         current_client_key = get_client_key(self.key, client_id)
 
         # Updating the client's state with the value to be set
         hot_redis.Dict(key=current_client_key, client=connection)[current_client_key] = val
 
+    def exists(self, client_id):
+        if client_id in self.client_list:
+            return True
+        else:
+            return False

@@ -1,11 +1,11 @@
 from flask import Flask
 
 from crdt.constants import DATA_TYPES, NULL_TYPE, DUMMY_KEY
+from crdt.control.client_api import client_api_blueprint
 from crdt.control.counter_api import counter_api_blueprint
 from crdt.control.set_api import set_api_blueprint
-from crdt.control.client_api import client_api_blueprint
+from crdt.model.pnset import PNSet
 from redis_manager import redis_manager
-from crdt.model.twopset import TwoPSet
 
 app = Flask(__name__)
 

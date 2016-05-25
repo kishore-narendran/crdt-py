@@ -24,3 +24,10 @@ def get_add_set_key(key):
 def get_delete_set_key(key):
     return key + 'D'
 
+
+def get_pnset_key(key):
+    return key + 'PN_SET'
+
+
+def get_pnset_item_key(key, item):
+    return key + '_' + item

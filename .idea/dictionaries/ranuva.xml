@@ -2,6 +2,13 @@
   <dictionary name="ranuva">
     <words>
       <w>gcounter</w>
+      <w>ncounter</w>
+      <w>nval</w>
+      <w>nvalue</w>
+      <w>pcounter</w>
+      <w>pnset</w>
+      <w>pval</w>
+      <w>pvalue</w>
     </words>
   </dictionary>
 </component>

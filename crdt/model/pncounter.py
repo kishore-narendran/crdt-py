@@ -2,8 +2,8 @@ import hot_redis
 
 from crdt.constants import DATA_TYPES, PN_COUNTER
 from crdt.key_utilities import get_client_list_key, get_client_key, get_pcounter_key, get_ncounter_key
-from crdt.redis_manager import connection
 from crdt.model.gcounter import GCounter
+from crdt.redis_manager import connection
 
 
 class PNCounter:
@@ -26,13 +26,24 @@ class PNCounter:
         self.pcounter.add_client(client_id)
         self.ncounter.add_client(client_id)
 
-    def get(self, client_id):
+    def get(self, client_id=None):
         pvalue = self.pcounter.get(client_id)
         nvalue = self.ncounter.get(client_id)
         count = pvalue - nvalue
         return count
 
+    def increment(self, client_id, inc=1):
+        self.pcounter.increment(client_id, inc)
+
+    def decrement(self, client_id, dec=1):
+        self.ncounter.increment(client_id, dec)
+
     def set(self, client_id, pval, nval):
         self.pcounter.set(client_id, pval)
         self.ncounter.set(client_id, nval)
 
+    def exists(self, client_id):
+        if client_id in self.client_list:
+            return True
+        else:
+            return False

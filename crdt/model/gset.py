@@ -66,3 +66,8 @@ class GSet:
         # Updating the client's state with the value to be set
         hot_redis.Dict(key=current_client_key, client=connection)[current_client_key] = val
 
+    def exists(self, client_id):
+        if client_id in self.client_list:
+            return True
+        else:
+            return False
