@@ -16,3 +16,11 @@ def get_pcounter_key(key):
 def get_ncounter_key(key):
     return key + 'N'
 
+
+def get_add_set_key(key):
+    return key + 'A'
+
+
+def get_delete_set_key(key):
+    return key + 'D'
+
