@@ -1,13 +1,13 @@
-from flask import Blueprint, jsonify, request
-
-from crdt.model.constants import DATA_TYPES, G_COUNTER, CLIENTS
-from generate_key import generate_random_key
-from redis_manager import redis_manager
-from status_codes import status_codes
 import hot_redis
-from redis_manager import connection
+from flask import Blueprint, request
+
+from crdt.constants import DATA_TYPES, G_COUNTER
+from crdt.generate_key import generate_random_key
+from crdt.redis_manager import connection
+from crdt.model.gcounter import GCounter
+
+
 counter_api_blueprint = Blueprint('Counter', __name__)
-from model.gcounter import GCounter
 
 
 @counter_api_blueprint.route("/g/new", methods=['GET'])
@@ -27,6 +27,7 @@ def new_g_counter():
 
     # TODO: send success
 
+
 @counter_api_blueprint.route("/g/set", methods=['GET'])
 def set_g_counter():
     key = request.args.get('key')
@@ -43,6 +44,7 @@ def set_g_counter():
         g_counter.set(client_id, value)
 
     # TODO: send success
+
 
 @counter_api_blueprint.route("/g/get", methods=['GET'])
 def get_g_counter():

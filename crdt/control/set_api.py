@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
-from generate_key import generate_random_key
-from redis_manager import redis_manager
-from status_codes import status_codes
+from crdt.generate_key import generate_random_key
+from crdt.redis_manager import redis_manager
+from crdt.status_codes import status_codes
 
 
 set_api_blueprint = Blueprint('Set', __name__)
