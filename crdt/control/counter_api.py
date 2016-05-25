@@ -2,7 +2,7 @@ import hot_redis
 from flask import Blueprint, request
 
 from crdt.constants import DATA_TYPES, G_COUNTER
-from crdt.generate_key import generate_random_key
+from crdt.generate_key import generate_random_crdt_key
 from crdt.redis_manager import connection
 from crdt.model.gcounter import GCounter
 
@@ -16,7 +16,7 @@ def new_g_counter():
     client_id = request.args.get('client_id')
     # TODO: check if client_id valid
     if key is not None or len(key)==0:
-        key = generate_random_key()
+        key = generate_random_crdt_key()
     if key in hot_redis.Dict(key=DATA_TYPES, client=connection).keys()\
         or hot_redis.Dict(key=DATA_TYPES, client=connection)[key] is not G_COUNTER:
         # TODO: return type fail
@@ -34,7 +34,7 @@ def set_g_counter():
     client_id = request.args.get('client_id')
     value = request.args.get('value')
     if key is not None or len(key) == 0:
-        key = generate_random_key()
+        key = generate_random_crdt_key()
     if key in hot_redis.Dict(key=DATA_TYPES, client=connection).keys() \
             or hot_redis.Dict(key=DATA_TYPES, client=connection)[key] is not G_COUNTER:
         # TODO: return type fail
@@ -52,7 +52,7 @@ def get_g_counter():
     client_id = request.args.get('client_id')
     value = request.args.get('value')
     if key is not None or len(key) == 0:
-        key = generate_random_key()
+        key = generate_random_crdt_key()
     if key in hot_redis.Dict(key=DATA_TYPES, client=connection).keys() \
             or hot_redis.Dict(key=DATA_TYPES, client=connection)[key] is not G_COUNTER:
         # TODO: return type fail

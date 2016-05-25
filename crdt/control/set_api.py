@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from crdt.generate_key import generate_random_key
+from crdt.generate_key import generate_random_crdt_key
 from crdt.redis_manager import redis_manager
 from crdt.status_codes import status_codes
 
@@ -14,7 +14,7 @@ def new_g_set():
     # If the key in request is empty or if there is no key in request
 
     if key is None or len(key) is 0:
-        key = generate_random_key()
+        key = generate_random_crdt_key()
 
     ##
     #  Checking if the key is already present in Redis
@@ -70,7 +70,7 @@ def new_pn_set():
     # If the key in request is empty or if there is no key in request
 
     if key is None or len(key) is 0:
-        key = generate_random_key()
+        key = generate_random_crdt_key()
 
     ##
     #  Checking if the key is already present in Redis
