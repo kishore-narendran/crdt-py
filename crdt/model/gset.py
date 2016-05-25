@@ -7,7 +7,7 @@ from crdt.redis_manager import connection
 
 class GSet:
     def __init__(self, key):
-        # Setting the key of the GCounter Instance
+        # Setting the key of the GSet Instance
         self.key = key
 
         # Getting/Setting the client list and type of the GSet instance
@@ -56,13 +56,11 @@ class GSet:
 
         # Merging Client A's state with Client B's state and storing in Client A's State
         for client in self.client_list:
-            a = eval(client_a_state[client])
-            b = eval(client_b_state[client])
             client_a_state[client] = repr(eval(client_a_state[client]).union(eval(client_b_state[client])))
 
     def set(self, client_id, val):
 
-        # Generating the current client's key for GCounter
+        # Generating the current client's key for GSet
         current_client_key = get_client_key(self.key, client_id)
 
         # Updating the client's state with the value to be set
