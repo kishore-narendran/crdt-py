@@ -5,6 +5,7 @@ from crdt.control.counter_api import counter_api_blueprint
 from crdt.control.set_api import set_api_blueprint
 from crdt.control.client_api import client_api_blueprint
 from redis_manager import redis_manager
+from crdt.model.gcounter import GCounter
 
 app = Flask(__name__)
 
@@ -14,13 +15,21 @@ app.register_blueprint(client_api_blueprint, url_prefix='/client')
 
 
 def run():
-    app.run()
+    # print 'Flush Redis!'
+    # redis_manager.flushdb()
+    # redis_manager.flushall()
+    gc = GCounter(key='abcd')
+    gc.add_client('a')
+    gc.set('a', 1)
+    gc.add_client('b')
+    gc.set('b', 2)
+    gc.add_client('c')
+    gc.set('c', 3)
+    gc.add_client('d')
+    gc.set('d', 4)
 
-
-def redis_init():
-    redis_manager.flushall()
-
+    print gc.get('d')
+    app.run(debug=True)
 
 if __name__ == "__main__":
-    redis_init()
     run()

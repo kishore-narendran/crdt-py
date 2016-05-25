@@ -4,6 +4,7 @@ from crdt.generate_key import generate_random_client_key
 from crdt.redis_manager import connection
 from crdt.constants import ALL_CLIENTS
 from crdt.status_codes import status_codes
+
 client_api_blueprint = Blueprint('Client', __name__)
 
 
