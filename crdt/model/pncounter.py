@@ -1,6 +1,6 @@
 import hot_redis
 
-from crdt.constants import CLIENTS, DATA_TYPES, PN_COUNTER
+from crdt.constants import DATA_TYPES, PN_COUNTER
 from crdt.key_utilities import get_client_list_key, get_client_key, get_pcounter_key, get_ncounter_key
 from crdt.redis_manager import connection
 from crdt.model.gcounter import GCounter

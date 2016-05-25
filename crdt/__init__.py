@@ -5,7 +5,7 @@ from crdt.control.counter_api import counter_api_blueprint
 from crdt.control.set_api import set_api_blueprint
 from crdt.control.client_api import client_api_blueprint
 from redis_manager import redis_manager
-from crdt.model.pncounter import PNCounter
+from crdt.model.gset import GSet
 
 app = Flask(__name__)
 
@@ -18,15 +18,28 @@ def run():
     # print 'Flush Redis!'
     # redis_manager.flushdb()
     # redis_manager.flushall()
-    gc = PNCounter(key='abcd')
+    gc = GSet(key='abcd')
     gc.add_client('a')
-    gc.set('a', 5, 0)
+    a = set()
+    a.add('a')
+    a.add('b')
+    print repr(a)
+    gc.set('a', repr(a))
+    b = set()
+    b.add('c')
+    b.add('d')
     gc.add_client('b')
-    gc.set('b', 2, 1)
+    gc.set('b', repr(b))
+    c = set()
+    c.add('e')
+    c.add('f')
     gc.add_client('c')
-    gc.set('c', 3, 2)
+    gc.set('c', repr(c))
+    d = set()
+    d.add('g')
+    d.add('h')
     gc.add_client('d')
-    gc.set('d', 4, 4)
+    gc.set('d', repr(d))
 
     print gc.get('d')
     app.run(debug=True)
