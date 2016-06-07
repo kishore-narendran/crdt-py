@@ -30,7 +30,7 @@ class TwoPSet:
         add_set_value = self.add_set.get(client_id)
         delete_set_value = self.delete_set.get(client_id)
         final_set = eval(add_set_value).difference(eval(delete_set_value))
-        return final_set
+        return repr(final_set)
 
     def set(self, client_id, add_set, delete_set):
         self.add_set.set(client_id, add_set)

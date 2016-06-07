@@ -29,5 +29,5 @@ def get_pnset_key(key):
     return key + 'PN_SET'
 
 
-def get_pnset_item_key(key, item):
+def get_pncounter_item_pnset_key(key, item):
     return key + '_' + item
