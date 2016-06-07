@@ -19,4 +19,6 @@ status_codes = {
                              'description': 'Client has not been added to CRDT instance'},
     'value_not_found': {'message': 'failure', 'code': 9,
                         'description': 'Value is missing'},
+    'timestamp_not_valid': {'message': 'failure', 'code': 10,
+                        'description': 'Timestamp value is not valid'},
 }
