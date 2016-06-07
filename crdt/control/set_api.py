@@ -149,6 +149,26 @@ def set_twop_set():
         return jsonify(result_dict)
 
 
+@set_api_blueprint.route("/twop/check", methods=['GET'])
+def check_twop_set():
+    key = request.args.get('key')
+    client_id = request.args.get('client_id')
+    item = request.args.get('item')
+
+    result_dict = dict()
+
+    check = check_input_fault(key, client_id, TWO_P_SET)
+    if check is False:
+        twop_set = TwoPSet(key=key)
+        is_found = twop_set.check(client_id, item)
+        result_dict['status'] = status_codes['success']
+        result_dict['found'] = is_found
+        return jsonify(result_dict)
+    else:
+        result_dict = check
+        return jsonify(result_dict)
+
+
 @set_api_blueprint.route("/twop/get", methods=['GET'])
 def get_twop_set():
     key = request.args.get('key')

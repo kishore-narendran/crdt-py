@@ -4,6 +4,7 @@ from crdt.constants import DATA_TYPES, TWO_P_SET
 from crdt.key_utilities import get_client_list_key, get_client_key, get_add_set_key, get_delete_set_key
 from crdt.redis_manager import connection
 from crdt.model.gset import GSet
+from random import random
 
 
 class TwoPSet:
@@ -31,6 +32,17 @@ class TwoPSet:
         delete_set_value = self.delete_set.get(client_id)
         final_set = eval(add_set_value).difference(eval(delete_set_value))
         return repr(final_set)
+
+    def check(self, val, client_id=None):
+        if client_id is None:
+            final_set = self.get(self, random.choice(list(self.client_list)))
+        else:
+            final_set = self.get(self, client_id)
+        final_set = eval(final_set)
+        if val in final_set:
+            return True
+        else:
+            return False
 
     def set(self, client_id, add_set, delete_set):
         self.add_set.set(client_id, add_set)
