@@ -25,6 +25,14 @@ def get_delete_set_key(key):
     return key + 'D'
 
 
+def get_nodes_set_key(key):
+    return key + '_NODES'
+
+
+def get_edges_set_key(key):
+    return key + '_EDGES'
+
+
 def get_pnset_key(key):
     return key + 'PN_SET'
 
