@@ -47,6 +47,10 @@ class GSet:
         for val in current_client_state.values():
             count = count.union(eval(val))
 
+        current_client_state[current_client_key] = repr(count)
+        print repr(count)
+        print current_client_state[current_client_key]
+
         return repr(count)
 
     def merge(self, client_a, client_b):

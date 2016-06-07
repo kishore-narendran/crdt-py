@@ -120,8 +120,8 @@ def new_pn_counter():
             return jsonify(result_dict)
 
     # All conditions met for key and client ID
-    new_pn_counter = PNCounter(key=key)
-    new_pn_counter.add_client(client_id)
+    pn_counter = PNCounter(key=key)
+    pn_counter.add_client(client_id)
     result_dict['status'] = status_codes['success']
     result_dict['key'] = key
     result_dict['data_type'] = data_types[key]

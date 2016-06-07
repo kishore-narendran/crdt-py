@@ -1,7 +1,7 @@
 import hot_redis
 
 from crdt.constants import DATA_TYPES, PN_SET
-from crdt.key_utilities import get_client_list_key, get_client_key, get_pnset_item_key, get_pnset_key
+from crdt.key_utilities import get_client_list_key, get_client_key, get_pncounter_item_pnset_key, get_pnset_key
 from crdt.model.pncounter import PNCounter
 from crdt.redis_manager import connection
 
@@ -19,24 +19,24 @@ class PNSet:
         self.client_list.add(new_client)
 
     def add_client_item(self, client_id, item):
-        pn_item_counter = PNCounter(get_pnset_item_key(self.key, item))
+        pn_item_counter = PNCounter(get_pncounter_item_pnset_key(self.key, item))
         if not pn_item_counter.exists(client_id):
             pn_item_counter.add_client(client_id)
 
     def add(self, client_id, item):
         self.pnset.add(item)
         self.add_client_item(client_id, item)
-        PNCounter(get_pnset_item_key(self.key, item)).increment(client_id)
+        PNCounter(get_pncounter_item_pnset_key(self.key, item)).increment(client_id)
 
     def remove(self, client_id, item):
         self.add_client_item(client_id, item)
-        PNCounter(get_pnset_item_key(self.key, item)).decrement(client_id)
+        PNCounter(get_pncounter_item_pnset_key(self.key, item)).decrement(client_id)
 
     def get(self):
         count = set()
         with hot_redis.transaction():  # for consistency
             for item in self.pnset:
-                if PNCounter(get_pnset_item_key(self.key, item)).get() <= 0:
+                if PNCounter(get_pncounter_item_pnset_key(self.key, item)).get() <= 0:
                     self.pnset.remove(item)  # Garbage Collection
                 else:
                     count.add(item)
