@@ -51,7 +51,7 @@ class GSet:
         print repr(count)
         print current_client_state[current_client_key]
 
-        return repr(count)
+        return str(list(count))
 
     def merge(self, client_a, client_b):
         # Getting Client A and Client B's state
@@ -68,7 +68,7 @@ class GSet:
         current_client_key = get_client_key(self.key, client_id)
 
         # Updating the client's state with the value to be set
-        hot_redis.Dict(key=current_client_key, client=connection)[current_client_key] = val
+        hot_redis.Dict(key=current_client_key, client=connection)[current_client_key] = repr(set(eval(val)))
 
     def exists(self, client_id):
         if client_id in self.client_list:

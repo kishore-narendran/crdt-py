@@ -30,14 +30,14 @@ class TwoPSet:
     def get(self, client_id):
         add_set_value = self.add_set.get(client_id)
         delete_set_value = self.delete_set.get(client_id)
-        final_set = eval(add_set_value).difference(eval(delete_set_value))
+        final_set = set(eval(add_set_value)).difference(set(eval(delete_set_value)))
         return repr(final_set)
 
     def check(self, val, client_id=None):
         if client_id is None:
-            final_set = self.get(self, random.choice(list(self.client_list)))
+            final_set = self.get(random.choice(list(self.client_list)))
         else:
-            final_set = self.get(self, client_id)
+            final_set = self.get(client_id)
         final_set = eval(final_set)
         if val in final_set:
             return True
