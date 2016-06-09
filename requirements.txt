@@ -1,8 +1,11 @@
 Flask==0.10.1
+Flask-Cors==2.1.2
 gunicorn==19.5.0
+hot-redis==0.2.2
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
 redis==2.10.5
+six==1.10.0
+sphinx-me==0.3
 Werkzeug==0.11.9
-hot_redis==0.2.2
