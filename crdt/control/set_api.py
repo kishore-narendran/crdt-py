@@ -3,7 +3,7 @@ from crdt.generate_key import generate_random_crdt_key
 from crdt.constants import ALL_CLIENTS, DATA_TYPES, G_SET, TWO_P_SET
 from crdt.key_utilities import get_client_list_key, get_client_key
 from crdt.model.gset import GSet
-from crdt.model.twopset import TwoPSet
+from crdt.model.TwoPSet import TwoPSet
 from crdt.status_codes import status_codes
 from crdt.redis_manager import connection
 import hot_redis
